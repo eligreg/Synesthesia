@@ -1,26 +1,53 @@
 class SacredCircle {
-  SacredPoint center;
-  float diameter;
-  int depth, degree;
   
-  SacredCircle(SacredPoint _center, float _diameter, int _depth, int _degree) {
+  SacredPoint center;
+  float diameter, vibrance;
+
+  SacredCircle(SacredPoint _center, float _diameter) {
     center = _center;
     diameter = _diameter;
-    depth = _depth;
-    degree = _degree;
+    vibrance = 0.0;
   }
   
-  void drawCircle(float n, float nw, float sw, float s, float se, float ne) {
-    noFill();
+  void drawCircleVibrance(color c) {
+    stroke(colorWithAlpha(c, vibranceEightBit()));
+    ellipse(center.x, center.y, diameter, diameter);
+    vibrance = 0.0;
+  }
+
+  void drawCircle(color c) {
+    stroke(c);
+    ellipse(center.x, center.y, diameter, diameter);
+  }
+
+  void drawCircle() {
     stroke(255);
     ellipse(center.x, center.y, diameter, diameter);
   }
-  
+
+  void drawCircleRandom() {
+    stroke(randomColor());
+    ellipse(center.x, center.y, diameter, diameter);
+  }
+
   float radius() {
-    return diameter / 2.0; 
+    return diameter / 2.0;
+  }
+
+  color randomColor() {
+    return color(random(255), random(255), random(255));
   }
   
-  //color randomColor() {
-  //  color(random(255),random(255),random(255));
-  //}
+  int vibranceEightBit() {
+    float mappedVibrance = map(vibrance, 0.0, 1.0, 0.0, 255.0);
+    float containedVibrance = min(max(mappedVibrance, 0.0), 255.0);
+    return int(containedVibrance);
+  }
+  
+  color colorWithAlpha(color c, int a) {
+    int r = (c >> 16) & 0xFF;
+    int g = (c >> 8) & 0xFF;
+    int b = c & 0xFF;
+    return color(r, g, b, a);
+  }
 }
