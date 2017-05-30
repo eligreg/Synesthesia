@@ -12,16 +12,19 @@ class SacredCircle {
   void drawCircleVibrance(color c) {
     stroke(colorWithAlpha(c, vibranceEightBit()));
     ellipse(center.x, center.y, diameter, diameter);
+    textSize(10);
+    //text(nf(vibrance, 1, 2), center.x - 10.0, center.y - 20.0);
     vibrance = 0.0;
   }
 
   void drawCircle(color c) {
-    stroke(c);
+    noStroke();
+    fill(c);
     ellipse(center.x, center.y, diameter, diameter);
   }
 
   void drawCircle() {
-    stroke(255);
+    stroke(255, 80);
     ellipse(center.x, center.y, diameter, diameter);
   }
 

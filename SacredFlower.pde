@@ -71,13 +71,14 @@ class SacredFlower {
   }
 
   // Draws the Sacred Geometry, draw loop
-  void drawGeometry(float n, float nw, float sw, float s, float se, float ne) {
+  void drawGeometry(SacredArduino arduino) {
     noFill();
     for (SacredCircle circle : circles) {
       for (SacredCircle cardinal: edgeCardinals) {
-        float deltaVibrance = 0.0;
-        float piezoVibrance = 0.1;
-        circle.vibrance += deltaVibrance + piezoVibrance;
+        float vibrance = vibranceThreshold(circle, cardinal);
+        if (vibrance > 0.0) {
+          circle.vibrance += vibrance;
+        }
       }
       circle.drawCircleVibrance(loud);
     }
@@ -103,6 +104,24 @@ class SacredFlower {
       circle.drawCircleRandom();
     }
   }
+  
+  private float vibranceModifier(float piezo, float threshold) {
+    float modifier = piezo * threshold;
+    return modifier == Float.NaN ? 0.0 : modifier;
+  }
+  
+  private float vibranceThreshold(SacredCircle a, SacredCircle b) {
+    // The distance from both circles
+    float distance = sqrt(sq(b.center.x - a.center.x) - sq(b.center.y - a.center.y));
+    float influence = circleInfluence();
+    
+    if (distance > influence) {
+      return 0.0;
+    }
+    
+    float vibrance = ((influence - distance) / influence);
+    return vibrance == Float.NaN ? 0.0 : vibrance;    
+  }
 
   private float radiansForI(int i) {
     return radians(degreesForI(i));
@@ -118,5 +137,10 @@ class SacredFlower {
 
   private float circleRadius() {
     return (circleDiameter() / 2.0);
+  }
+  
+  private float circleInfluence() {
+    float infl = float(depth-1) * circleRadius();
+    return infl;
   }
 }
