@@ -3,7 +3,6 @@ class DemoFlower {
   private SacredPoint center;
   private float sized;
   private SacredCircle n, nw, sw, s, se, ne;
-  private SacredThreshold threshold = new SacredThreshold(1.0, 100.0);
   
   // Factory Init
   DemoFlower(float _x, float _y, float _sized) {
@@ -14,14 +13,14 @@ class DemoFlower {
     
     for (int i = 3; i < 9; i++) {
       // Distance from center point
-      float delta = (sized / 2.0) - (threshold.max / 2.0);
+      float delta = (sized / 2.0);
 
-      n  = new SacredCircle(centerPoint(delta, radiansForI(0)), threshold.min);
-      nw = new SacredCircle(centerPoint(delta, radiansForI(1)), threshold.min);
-      sw = new SacredCircle(centerPoint(delta, radiansForI(2)), threshold.min);
-      s  = new SacredCircle(centerPoint(delta, radiansForI(3)), threshold.min);
-      se = new SacredCircle(centerPoint(delta, radiansForI(4)), threshold.min);
-      ne = new SacredCircle(centerPoint(delta, radiansForI(5)), threshold.min);
+      n  = new SacredCircle(centerPoint(delta, radiansForI(0)), 0.0);
+      nw = new SacredCircle(centerPoint(delta, radiansForI(1)), 0.0);
+      sw = new SacredCircle(centerPoint(delta, radiansForI(2)), 0.0);
+      s  = new SacredCircle(centerPoint(delta, radiansForI(3)), 0.0);
+      se = new SacredCircle(centerPoint(delta, radiansForI(4)), 0.0);
+      ne = new SacredCircle(centerPoint(delta, radiansForI(5)), 0.0);
     }
   }
   

@@ -4,7 +4,7 @@ class SacredFlower {
   private int depth;
 
   // Mutable colors range
-  color loud = color(255, 255, 255);
+  color shakra = color(255, 255, 255);
 
   // Sacred Circle Storage
   ArrayList<SacredCircle> circles = new ArrayList<SacredCircle>();
@@ -58,8 +58,8 @@ class SacredFlower {
 
   // Cardinal Circle Center Generator
   private SacredPoint centerPoint(float radius, float radian) {
-    float x = center.center.x + radius * cos(radian);
-    float y = center.center.y + radius * sin(radian);
+    float x = center.center.x + (radius * cos(radian));
+    float y = center.center.y + (radius * sin(radian));
     return new SacredPoint(x, y);
   }
 
@@ -74,13 +74,15 @@ class SacredFlower {
   void drawGeometry(SacredArduino arduino) {
     noFill();
     for (SacredCircle circle : circles) {
-      for (SacredCircle cardinal: edgeCardinals) {
-        float vibrance = vibranceThreshold(circle, cardinal);
-        if (vibrance > 0.0) {
-          circle.vibrance += vibrance;
-        }
+      float vibrance = 0.0;
+      for (int i = 0; i < 6; i++) {
+        SacredCircle cardinal = edgeCardinals[i];
+        float vib = 0.0;
+        vib += potentialVibranceForCircles(circle, cardinal);
+        vib *= arduino.vibranceForIndex(i);
+        vibrance += vib;
+        circle.drawCircleVibrance(shakra, min(vibrance, 1.0));
       }
-      circle.drawCircleVibrance(loud);
     }
   }
 
@@ -104,24 +106,6 @@ class SacredFlower {
       circle.drawCircleRandom();
     }
   }
-  
-  private float vibranceModifier(float piezo, float threshold) {
-    float modifier = piezo * threshold;
-    return modifier == Float.NaN ? 0.0 : modifier;
-  }
-  
-  private float vibranceThreshold(SacredCircle a, SacredCircle b) {
-    // The distance from both circles
-    float distance = sqrt(sq(b.center.x - a.center.x) - sq(b.center.y - a.center.y));
-    float influence = circleInfluence();
-    
-    if (distance > influence) {
-      return 0.0;
-    }
-    
-    float vibrance = ((influence - distance) / influence);
-    return vibrance == Float.NaN ? 0.0 : vibrance;    
-  }
 
   private float radiansForI(int i) {
     return radians(degreesForI(i));
@@ -139,8 +123,28 @@ class SacredFlower {
     return (circleDiameter() / 2.0);
   }
   
-  private float circleInfluence() {
-    float infl = float(depth-1) * circleRadius();
-    return infl;
+  // TODO
+  private float maxVibranceDistance() {
+    return ((float(depth) - 1.0) * circleRadius()) + circleRadius();
+  }
+  
+  private float minVibranceEffect() {
+    return 1.0 / 6.0; 
+  }
+ 
+  private float potentialVibranceForCircles(SacredCircle curr, SacredCircle card) {
+     float actualDistance = curr.distanceFrom(card);
+     float lowestDistance = 0.0;
+     float highestDistance = maxVibranceDistance();
+     if (actualDistance > highestDistance) {
+       return 0.0;
+     }
+     float lowestVibrance = minVibranceEffect();
+     float highestVibrance = 1.0;
+     //println(actualDistance + " " + lowestDistance + " " + highestDistance + " " + lowestVibrance + " " + highestVibrance);
+     float pVib = map(actualDistance, lowestDistance, highestDistance, lowestVibrance, highestVibrance);
+     //println(pVib);
+     //print("\n");
+     return 1.0 - pVib;
   }
 }

@@ -3,10 +3,11 @@ import cc.arduino.*;
 
 SacredArduino arduino;
 SacredFlower flower;
-DemoFlower demo;
+//DemoFlower demo;
 Recorder recorder;
 
 final boolean shouldRecord = false;
+
 
 void setup() {
 
@@ -14,14 +15,16 @@ void setup() {
   pixelDensity(2);
 
   // Build Arduino
-  arduino = new SacredArduino(new Arduino(this, Arduino.list()[4], 57600));
+  //arduino = new SacredArduino(new Arduino(this, Arduino.list()[4], 57600));
   //arduino = new SacredArduino(new Arduino(this, "/dev/tty.usbmodem621", 57600));
+  arduino = new SacredArduino(null);
+  arduino.fake(1,6,12,19,27,36);
   
   // Build Flower
-  flower = new SacredFlower(width/2.0, height/2.0, height - 100.0, 4);
+  flower = new SacredFlower(width/2.0, height/2.0, height - 100.0, 6);
   
   // Build Demo
-  demo = new DemoFlower(width/2.0, height/2.0, height - 126.0);
+  //demo = new DemoFlower(width/2.0, height/2.0, height - 126.0);
   
   // Recorder
   if (shouldRecord) recorder = new Recorder();
@@ -33,13 +36,15 @@ void draw() {
   background(127);
   
   // Read arduino
-  arduino.read();
+  //arduino.read();
+  arduino.fake();
   
   // Draw Flower
-  flower.drawGeometry(); 
+  //flower.drawGeometry(); 
+  flower.drawGeometry(arduino);
 
   // Draw Demo
-  demo.drawGeometry(arduino);
+  //demo.drawGeometry(arduino);
   
   // Record
   if (shouldRecord) recorder.recordArduino(arduino);

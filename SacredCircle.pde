@@ -1,25 +1,21 @@
 class SacredCircle {
   
   SacredPoint center;
-  float diameter, vibrance;
+  float diameter;
 
   SacredCircle(SacredPoint _center, float _diameter) {
     center = _center;
     diameter = _diameter;
-    vibrance = 0.0;
   }
   
-  void drawCircleVibrance(color c) {
-    stroke(colorWithAlpha(c, vibranceEightBit()));
+  // vibrance: 0.0 - 1.0
+  void drawCircleVibrance(color c, float vibrance) {
+    stroke(colorWithAlpha(c, vibranceEightBit(vibrance)));
     ellipse(center.x, center.y, diameter, diameter);
-    textSize(10);
-    //text(nf(vibrance, 1, 2), center.x - 10.0, center.y - 20.0);
-    vibrance = 0.0;
   }
 
   void drawCircle(color c) {
-    noStroke();
-    fill(c);
+    stroke(c);
     ellipse(center.x, center.y, diameter, diameter);
   }
 
@@ -41,7 +37,7 @@ class SacredCircle {
     return color(random(255), random(255), random(255));
   }
   
-  int vibranceEightBit() {
+  int vibranceEightBit(float vibrance) {
     float mappedVibrance = map(vibrance, 0.0, 1.0, 0.0, 255.0);
     float containedVibrance = min(max(mappedVibrance, 0.0), 255.0);
     return int(containedVibrance);
@@ -52,5 +48,9 @@ class SacredCircle {
     int g = (c >> 8) & 0xFF;
     int b = c & 0xFF;
     return color(r, g, b, a);
+  }
+  
+  float distanceFrom(SacredCircle cir) {
+    return dist(center.x, center.y, cir.center.x, cir.center.y);
   }
 }
